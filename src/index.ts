@@ -1,4 +1,4 @@
-import { DefaultRubyVM } from "ruby-head-wasm-wasi/dist/browser.umd";
+import { DefaultRubyVM } from "./DefaultRubyVM";
 
 async function init() {
   console.log("Hey!");
