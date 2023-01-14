@@ -1,0 +1,38 @@
+# NOTE: https://github.com/tnantoka/rubocop-on-wasm/blob/898934de0c6de60e9f0b67291850b3c7839ced5a/rubocop.wasm/Rakefile#L1
+RUBY_WASM_TAG = 'ruby-head-wasm-wasi-0.5.0'
+RUBY_WASM_ASSET = 'head-wasm32-unknown-wasi-full-js'
+WASI_VFS_VERSION = '0.2.0'
+
+RUBY_ROOT = File.join("rubies", RUBY_WASM_TAG)
+
+task :default => "static/rubocop-ast.wasm"
+
+desc "Build rubocop-ast.wasm"
+file "static/rubocop-ast.wasm" => [] do
+  unless File.exist?('wasi-vfs')
+    sh "curl -LO https://github.com/kateinoigakukun/wasi-vfs/releases/download/v#{WASI_VFS_VERSION}/wasi-vfs-cli-x86_64-apple-darwin.zip"
+    sh 'unzip wasi-vfs-cli-x86_64-apple-darwin.zip'
+  end
+
+  unless File.exist?(RUBY_ROOT)
+    archive = "ruby-#{RUBY_WASM_ASSET}.tar.gz"
+    sh "curl -LO https://github.com/ruby/ruby.wasm/releases/download/#{RUBY_WASM_TAG}/#{archive}"
+    sh "tar xf #{archive}"
+    mv RUBY_WASM_ASSET, RUBY_ROOT
+  end
+
+  sh "bundle install --path vendor/bundle"
+
+  # NOTE: https://github.com/kateinoigakukun/irb.wasm/blob/1d6696ea1c6fa5206b7e6a0eab3468c409545c8c/Rakefile#L67
+  require "tmpdir"
+  Dir.mktmpdir do |dir|
+    tmpruby = File.join(dir, "ruby")
+    cp_r RUBY_ROOT, tmpruby
+    rm_rf File.join(tmpruby, "usr", "local", "include")
+    rm_f File.join(tmpruby, "usr", "local", "lib", "libruby-static.a")
+    ruby_wasm = File.join(dir, "ruby.wasm")
+    mv File.join(tmpruby, "usr", "local", "bin", "ruby"), ruby_wasm
+    sh "./wasi-vfs pack #{ruby_wasm} --mapdir /usr::#{File.join(tmpruby, "usr")} --mapdir /gems::./fake-gems --mapdir /bundle::./vendor/bundle/ruby/3.1.0/gems -o static/rubocop-ast.wasm"
+    cp 'static/rubocop-ast.wasm', '../public'
+  end
+end

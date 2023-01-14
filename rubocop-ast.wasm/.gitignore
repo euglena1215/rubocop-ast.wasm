@@ -1,0 +1,9 @@
+
+.bundle
+rubies/*
+!rubies/.gitkeep
+static/rubocop-ast.wasm
+vendor/bundle/
+wasi-vfs
+ruby-head-wasm32-unknown-wasi-full-js.tar.gz
+wasi-vfs-cli-x86_64-apple-darwin.zip
