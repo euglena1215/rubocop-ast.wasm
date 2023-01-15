@@ -7,5 +7,10 @@ class AstChecker
     rescue RuboCop::AST::NodePattern::Invalid
       nil
     end
+
+    def convert_ast(source_code)
+      node = RuboCop::AST::ProcessedSource.new(source_code, RUBY_VERSION.to_f).ast
+      node.to_s
+    end
   end
 end
