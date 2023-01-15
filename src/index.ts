@@ -1,4 +1,4 @@
-import { DefaultRubyVM } from "./DefaultRubyVM";
+import { CustomRubyVM } from "./CustomRubyVM";
 
 async function init() {
   console.log("Hey!");
@@ -10,12 +10,19 @@ async function init() {
 
   const buffer = await res.arrayBuffer();
   const module = await WebAssembly.compile(buffer);
-  const { vm } = await DefaultRubyVM(module);
+  const { vm } = await CustomRubyVM(module);
 
   const output = vm.eval(`
-    "I'm working in RubyVM!"
-    # require 'rubocop'
-    # "rubocop version is #{RuboCop::Version.version}!"
+    puts "I'm working in RubyVM!"
+
+    def Dir.home = "/home/me"
+    Dir.glob('/bundle/*').each do |dir|
+      $LOAD_PATH << "#{dir}/lib"
+    end
+
+    require 'rubocop-ast'
+
+    "rubocop-ast version is #{RuboCop::AST::Version::STRING}!"
   `);
 
   console.log(output.toString());

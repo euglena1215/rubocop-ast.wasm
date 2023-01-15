@@ -8,7 +8,7 @@ RUBY_ROOT = File.join("rubies", RUBY_WASM_TAG)
 task :default => "static/rubocop-ast.wasm"
 
 desc "Build rubocop-ast.wasm"
-file "static/rubocop-ast.wasm" => [] do
+task "static/rubocop-ast.wasm" => [] do
   unless File.exist?('wasi-vfs')
     sh "curl -LO https://github.com/kateinoigakukun/wasi-vfs/releases/download/v#{WASI_VFS_VERSION}/wasi-vfs-cli-x86_64-apple-darwin.zip"
     sh 'unzip wasi-vfs-cli-x86_64-apple-darwin.zip'
@@ -35,4 +35,16 @@ file "static/rubocop-ast.wasm" => [] do
     sh "./wasi-vfs pack #{ruby_wasm} --mapdir /usr::#{File.join(tmpruby, "usr")} --mapdir /gems::./fake-gems --mapdir /bundle::./vendor/bundle/ruby/3.1.0/gems -o static/rubocop-ast.wasm"
     cp 'static/rubocop-ast.wasm', '../public'
   end
+end
+
+task :clean do
+  rm_rf 'rubies'
+  rm_rf 'wasi-vfs'
+  rm_rf 'vendor/bundle'
+
+  mkdir 'rubies'
+  sh 'touch rubies/.gitkeep'
+
+  rm_f "../public/rubocop.wasm"
+  rm_f "static/rubocop.wasm"
 end

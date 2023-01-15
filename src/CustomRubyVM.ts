@@ -3,10 +3,11 @@
 import { WASI } from "@wasmer/wasi";
 import { WasmFs } from "@wasmer/wasmfs";
 import { RubyVM } from "ruby-head-wasm-wasi";
+import * as path from "path-browserify";
 
-// https://github.com/ruby/ruby.wasm/blob/b1723b36fbf7d600768788cfab9493d1d1118772/packages/npm-packages/ruby-wasm-wasi/src/browser.ts
+// Based on https://github.com/ruby/ruby.wasm/blob/b1723b36fbf7d600768788cfab9493d1d1118772/packages/npm-packages/ruby-wasm-wasi/src/browser.ts
 
-export const DefaultRubyVM = async (
+export const CustomRubyVM = async (
   rubyModule: WebAssembly.Module,
   options: { consolePrint: boolean } = { consolePrint: true }
 ): Promise<{
@@ -16,10 +17,19 @@ export const DefaultRubyVM = async (
   instance: WebAssembly.Instance;
 }> => {
   const wasmFs = new WasmFs();
+  const args = [
+    "rubocop-ast.wasm", "-e_=0", "-I/gems/lib",
+  ];
+  wasmFs.fs.mkdirSync("/home/me", { mode: 0o777, recursive: true });
   const wasi = new WASI({
+    args,
+    preopens: {
+      "/home": "/home",
+    },
     bindings: {
       ...WASI.defaultBindings,
       fs: wasmFs.fs,
+      path,
     },
   });
 
