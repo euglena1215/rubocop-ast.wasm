@@ -1,5 +1,3 @@
-public/rubocop-ast.wasm
-
 node_modules/
 dist/
 .cache/
