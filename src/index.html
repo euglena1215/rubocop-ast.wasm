@@ -8,7 +8,26 @@
   <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-  Hello World!
+  <h1>rubocop-ast.wasm</h1>
+  <div>
+    <form>
+      <label for="s-expression">Your S-expressions</label>
+      <input type="text" name="s-expression" id="s-expression">
+    </form>
+  </div>
+
+  <div>
+    <form>
+      <label for="test-program">Your test program</label>
+      <textarea name="test-program" id="test-program" cols="30" rows="10"></textarea>
+    </form>
+  </div>
+
+  <div>
+    <p>Result</p>
+    <div id="result"></div>
+  </div>
+  
   <script type="module" src="./index.ts"></script>
 </body>
 </html>
