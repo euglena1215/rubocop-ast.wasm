@@ -12,9 +12,13 @@
   </script>
 </head>
 <body class="p-8 mx-auto md:container">
-  <h1 class="font-mono text-6xl font-bold text-center">rubocop-ast.wasm</h1>
+  <div class="pb-8">
+    <h1 class="p-2 font-mono text-6xl font-bold text-center">rubocop-ast.wasm</h1>
+    <p class="p-2 font-mono text-center">a RuboCop AST checker & converter in WebAssembly</p>
+  </div>
   <div class="flex flex-row">
-    <div class="w-1/2">
+    <div class="w-1/2 border-r">
+      <h2 class="px-4 text-xl">Checker</h2>
       <div class="p-4">
         <form>
           <label class="text-lg" for="checker-s-expression">Your S-expression:</label>
@@ -25,17 +29,18 @@
       <div class="p-4">
         <form>
           <label class="text-lg" for="checker-test-program">Your test programs:</label>
-          <textarea name="checker-test-program" id="checker-test-program" cols="30" rows="10" class="block w-full p-2 border border-gray-300 rounded-md bg-gray-50" placeholder='"rubocop-ast.wasm"'></textarea>
+          <textarea name="checker-test-program" id="checker-test-program" rows="4" class="block w-full p-2 border border-gray-300 rounded-md bg-gray-50" placeholder='"rubocop-ast.wasm"'></textarea>
         </form>
       </div>
     
       <div class="p-4">
         <p class="text-lg">Match result:</p>
-        <ul id="result" class="list-disc"></ul>
+        <ul id="result" class="p-4 list-decimal"></ul>
       </div>
     </div>
 
     <div class="w-1/2">
+      <h2 class="px-4 text-xl">Converter</h2>
       <div class="p-4">
         <form>
           <label class="text-lg" for="converter-test-program">Your test program:</label>
@@ -50,6 +55,168 @@
     </div>
   </div>
   
+  <div class="m-8 border rounded-md">
+    <h2 class="p-4 px-4 text-2xl text-center">Pattern string format examples</h2>
+    <div class="px-8 columns-2">
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">sym</code>
+        <p class="inline ml-2">matches a literal symbol</p>
+      </div>
+      
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">1</code>
+        <p class="inline ml-2">matches a literal integer</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">nil</code>
+        <p class="inline ml-2">matches a literal nil</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">send</code>
+        <p class="inline ml-2">matches (send ...)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send)</code>
+        <p class="inline ml-2">matches (send)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send ...)</code>
+        <p class="inline ml-2">matches (send ...)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">{send class}</code>
+        <p class="inline ml-2">matches (send ...) or (class ...)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">({send class})</code>
+        <p class="inline ml-2">matches (send) or (class)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send const)</code>
+        <p class="inline ml-2">matches (send (const ...))</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send _ :new)</code>
+        <p class="inline ml-2">matches (send &lt;anything&gt; :new)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send $_ :new)</code>
+        <p class="inline ml-2">as above, but whatever matches the $_ is captured</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send $_ $_)</code>
+        <p class="inline ml-2">you can use as many captures as you want</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send !const ...)</code>
+        <p class="inline ml-2">! negates the next part of the pattern</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">$(send const ...)</code>
+        <p class="inline ml-2">arbitrary matching can be performed on a capture</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send _recv _msg)</code>
+        <p class="inline ml-2">wildcards can be named (for readability)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send ... :new)</code>
+        <p class="inline ml-2">you can specifically match against the last child (this only works for the very last)</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send $...)</code>
+        <p class="inline ml-2">capture all the children as an array</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send $... int)</code>
+        <p class="inline ml-2">capture all children but the last as an array</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send _x :+ _x)</code>
+        <p class="inline ml-2">unification is performed on named wildcards</p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(send _x :+ _x)</code>
+        <p class="inline ml-2">
+          unification is performed on named wildcards
+          (like Prolog variables...)
+          (#== is used to see if values unify)
+        </p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(int odd?)</code>
+        <p class="inline ml-2">
+          words which end with a ? are predicate methods,
+          are are called on the target to see if it matches
+          any Ruby method which the matched object supports
+          can be used
+          if a truthy value is returned, the match succeeds
+        </p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">(int [!1 !2])</code>
+        <p class="inline ml-2">
+          [] contains multiple patterns, ALL of which must
+          match in that position
+          in other words, while {} is pattern union (logical
+          OR), [] is intersection (logical AND)
+        </p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">^^send</code>
+        <p class="inline ml-2">
+          each ^ ascends one level in the AST
+          so this matches against the grandparent node
+        </p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">#method</code>
+        <p class="inline ml-2">
+          we call this a 'funcall'; it calls a method in the
+          context where a pattern-matching method is defined
+          if that returns a truthy value, the match succeeds
+        </p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">equal?(%1)</code>
+        <p class="inline ml-2">
+          predicates can be given 1 or more extra args
+        </p>
+      </div>
+
+      <div class="w-full p-2">
+        <code class="inline p-1 border rounded-md bg-gray-50">#method(%0, 1)</code>
+        <p class="inline ml-2">
+          funcalls can also be given 1 or more extra args
+        </p>
+      </div>
+    </div>
+
+    <p class="px-8 py-2 text-right">referenced from <a class="underline" target="_blank" href="https://github.com/rubocop/rubocop/blob/7053c715c3100911a8fd34109520a786a6408c39/lib/rubocop/node_pattern.rb">/lib/rubocop/node_pattern.rb</a></p>
+  </div>
   
   <script type="module" src="./index.ts"></script>
 </body>
