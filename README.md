@@ -1,10 +1,10 @@
 # rubocop-ast.wasm
 
-a RuboCop AST checker & converter in WebAssembly.
+a RuboCop AST checker & converter on browser powered by wasm.
 
 https://rubocop-ast-wasm.vercel.app/
 
-![](./docs/images/schreenshot.png)
+![](./public/screenshot.png)
 
 ## Development
 
