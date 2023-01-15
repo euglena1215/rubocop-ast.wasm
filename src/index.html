@@ -6,27 +6,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>rubocop-ast.wasm</title>
   <link rel="stylesheet" href="./index.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+          },
+        },
+      },
+    }
+  </script>
 </head>
-<body>
-  <h1>rubocop-ast.wasm</h1>
-  <div>
-    <form>
-      <label for="s-expression">Your S-expressions</label>
-      <input type="text" name="s-expression" id="s-expression">
-    </form>
-  </div>
+<body class="md:container mx-auto p-8">
+  <h1 class="font-mono text-2xl font-bold text-center">rubocop-ast.wasm</h1>
+  <div class="flex flex-row">
+    <div class="w-1/2">
+      <div class="p-4">
+        <form>
+          <label class="text-lg" for="s-expression">Your S-expressions</label>
+          <input type="text" name="s-expression" id="s-expression" class="border bg-gray-50 border-gray-300 rounded-md block w-full p-2" placeholder='(str "rubocop-ast.wasm")'>
+        </form>
+      </div>
+    
+      <div class="p-4">
+        <form>
+          <label class="text-lg" for="test-program">Your test program</label>
+          <textarea name="test-program" id="test-program" cols="30" rows="10" class="border bg-gray-50 border-gray-300 rounded-md block w-full p-2" placeholder='"rubocop-ast.wasm"'></textarea>
+        </form>
+      </div>
+    
+      <div class="p-4">
+        <p class="text-lg">Result</p>
+        <ul id="result" class="list-disc"></ul>
+      </div>
+    </div>
 
-  <div>
-    <form>
-      <label for="test-program">Your test program</label>
-      <textarea name="test-program" id="test-program" cols="30" rows="10"></textarea>
-    </form>
+    <div class="w-1/2">
+      TODO
+    </div>
   </div>
-
-  <div>
-    <p>Result</p>
-    <div id="result"></div>
-  </div>
+  
   
   <script type="module" src="./index.ts"></script>
 </body>

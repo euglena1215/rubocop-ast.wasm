@@ -91,7 +91,7 @@ const updateResultDom = () => {
 
   const resultSize = globalThis.testProgramValues.length;
   [...Array(resultSize)].forEach((_, i) => {
-    const rowElement = document.createElement("p");
+    const rowElement = document.createElement("li");
     rowElement.innerText = `${globalThis.testResults[i] ? "✅" : "❌"}: ${globalThis.testProgramValues[i]}`;
 
     resultDiv?.appendChild(rowElement);
