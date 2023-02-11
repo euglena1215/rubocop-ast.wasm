@@ -2,7 +2,9 @@
 
 a RuboCop AST checker & converter on browser powered by wasm.
 
-https://rubocop-ast-wasm.vercel.app/
+website: https://rubocop-ast-wasm.vercel.app/
+
+article: https://euglena1215.hatenablog.jp/entry/2023/02/11/160922
 
 ![](./public/screenshot.png)
 
